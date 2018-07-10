@@ -161,3 +161,91 @@ Additional volumes *can* be encrypted.
 ## How to use putty for windows lecture
 
 SKIPPED!
+
+## Security groups lab
+
+A security group is a virtual firewall
+
+Every EC2 instance has at least one security group.
+
+created a new ec2 instance with the security group from last time, installed apache and added a basic html file
+
+checked security group rules in the console.
+
+Delete http rule, and *immediately* we are not able to access the web page.
+
+Know for exam: security rule changes apply immediately.
+
+Added rule back and we were able to get back in.
+
+Deleted outbound rule, and we were still abel to load the web page.
+
+Security groups are stateful. All inbound rules will automatically be allowed out.
+
+Later, with network access control lists, those are stateless so you need inbound and outbound.
+
+Security group rules are stateful (not sure of the connection between state and inbound-outbound mapping but we'll probably come back to it later)
+
+In security groups, you can't *deny* specific traffic, you can only allow it. It's a whitelist.
+
+There's a default security group in each AZ, and it's set up by default to allow all traffic from instances in the same security group.
+
+added RDP and MYSQL/Aurora to default group
+
+in ec2 console, Actions -> networking -> change security groups to add another group
+
+we added that default security group to our ec2. You can add multiple security groups to an instance.
+
+VPC: stateless, Security group: stateful. It's been repeated a lot.
+
+## Upgrading EBS volumes
+
+created an ec2 instance with 3 different types of EBS volumes attached to it
+
+it wasn't free so I cancelled creating it
+
+EBS volumes have to be in the same AZ as the EC2 instance. Makes sense because latency.
+
+You can tell which volumes are root devices because they have a "snapshot"
+
+You can change the volume type and increase the size through the volumes console. (except on standard magnetic, can't change size on that)
+
+to move a volume to another AZ (common exam question) you can create a snapshot in the volumes console (takes like 5 minutes)
+
+Then from the snapshot you can create an image, volume, etc.
+
+Create a new volume and you can change the type, size, and AZ. This is how you could move a volume to a new zone and thus a new instance.
+
+Can also copy the snapshot to a new region. You'd have to do this to move an ec2 instance from one region to another.
+
+Creating an image from a snapshot lets you boot an EC2 image from that instance. Snapshots are from backups, images are used for creating new ec2s
+
+Image == AMI
+
+Can create a snapshot then an image from a snapshot, or you can create an image directly from an ec2 instance if you'd prefer
+
+By default, the root volume gets terminated when your EC2 is terminated, BUT the other attached volumes won't be terminated by default.
+
+### Exam tips
+
+Volume = Virtual hard disk
+
+Root device = boot disk
+
+Snapshots are saved in S3. They are a point in time copy of a Volume.
+
+Snapshots are incremental, only the blocks that have changed since your last snapshot are moved to S3.
+
+You shoudl stop an instance before taking a snapshot *probably*
+
+you can create an AMI from Instances and Snapshots
+
+You can change EBS volume sizes on the fly (this is relatively new)
+
+Volumes will ALWAYS be in the same availability zone as the EC2 instance.
+
+To move an EC2 to another AZ/Region, take a snapshot or an image, and then copy that to another region.
+
+Security wise, snapshots of encrypted volumes are encrypted automatically. Same goes when restoring a volume from an ecrypted snapshot
+
+You can share snapshots, but you can only do it if they are unencrypted
