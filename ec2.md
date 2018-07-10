@@ -249,3 +249,5 @@ To move an EC2 to another AZ/Region, take a snapshot or an image, and then copy 
 Security wise, snapshots of encrypted volumes are encrypted automatically. Same goes when restoring a volume from an ecrypted snapshot
 
 You can share snapshots, but you can only do it if they are unencrypted
+
+copying images/snapshots is SUPER important for the exam so know how to do it.
