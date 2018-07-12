@@ -366,3 +366,51 @@ Classic Load Balancers (also called Elastic Load Balancers) It's basically the d
 Load balancers will respond with a 504 error if your application stops responding.
 
 X-Forwarded-For Header is the http header that contains the IP of the original requestor, that's how your application will see the original IP when it's going through a load balancer.
+
+## Load balancer lab
+
+turned on that web server ec2 instance again to get a basic web page up. also add a healthcheck.html with just "OK" in it
+
+click on load balancers in the console to create one
+
+making a classic load balancer first
+
+don't make it internal, because it's balancing externally
+
+set it up to accept on port 80 and pass to port 80
+
+we get yelled at about not using ssl, but we can ignore that for this example.
+
+set the port and path for health check to 80 and healthcheck.html
+
+set the timeouts and thresholds to be low so that we can see the changes fast
+
+add our ec2 instance to the ELB, and add tags
+
+it's easy to forget ELBs, so don't forget to delete them
+
+created ELB, waiting a couple minutes for it to get picked up and for the health checks to settle
+
+deleted the healthcheck file to put it out of service
+
+put it back and see in the console that it goes back in service
+
+copy pasted the dns name from elb console into browser and saw that traffic was forwarded
+
+ELB does *not* get an IP address (in the console). Amazon manages you IP for ELBs because the public IPs might change, so they want you to use the DNS name.
+
+Creating an application load balancer
+
+you pick availbility zone for the ALB
+
+ALB setup is similar to ELB, but there are more options
+
+You have to set up a separate target group from the ALB. It's decomposed down into 2 pieces
+
+takes a minute for it to provision the ALB
+
+There's a deeper course on ALBs cuz there's a lot going on here
+
+For exam, read teh ELB FAQ because it's important.
+
+Deleted ELB and ALB
