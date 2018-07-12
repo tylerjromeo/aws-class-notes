@@ -350,3 +350,19 @@ Instance stores are older, EBS is newer.
 You can detatch an EBS volume and attach it to another instance if you want.
 
 Honestly not sure why you'd use instance store. (looked it up, you'd use it for freqwuently changing data like buffers or caches. Advantage it that it's physically attached to teh host that the EC2 is on)
+
+## Load balancers (lecture)
+
+A load balancer is a virtual appliance that balances the load of web applications over muliple resources (web servers) So that no 1 resource gets overwhelmed
+
+### Application Load Balancers
+
+Load balances http and https traffic. They are application aware and operate at Layer 7. It can make intelligent routing decisions like determining the traffic source etc.
+
+Network Load Balancers are for TCP traffic where extreme performance is required. It operates at Layer 4 (Connection Level) and can do millions of requests per second.
+
+Classic Load Balancers (also called Elastic Load Balancers) It's basically the depracated version of ALBs. Can do layer 7 and layer 4 stuff. But the layer 7 stuff is not as smart as ALBs though
+
+Load balancers will respond with a 504 error if your application stops responding.
+
+X-Forwarded-For Header is the http header that contains the IP of the original requestor, that's how your application will see the original IP when it's going through a load balancer.
