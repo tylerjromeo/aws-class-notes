@@ -251,3 +251,102 @@ Security wise, snapshots of encrypted volumes are encrypted automatically. Same 
 You can share snapshots, but you can only do it if they are unencrypted
 
 copying images/snapshots is SUPER important for the exam so know how to do it.
+
+## RAID, Volums & Snapshots
+
+instructions to create a RAID group with aws volumes, and launch windows vms.
+
+RAID types:
+
+* RAID 0 - Striped, No Redundancy, Good Performance
+* RAID 1 - Mirroed, Redundancy
+* Raid 5 - Good for reads, bad for writes, AWS discourages making RAID 5's on EBS
+* RAID 10 - striping and mirroring, good redundancy and good performance
+
+You'd use a RAID (probably 0 or 10) if you need better Disk I/O
+
+### Lab
+
+added RDP ports to our security group
+
+created a free windows ec2 instance
+
+(it actually cost a little money becuase we added 4 additional volumes)
+
+RDP into the instance with the user `administrator` and the password is from the platform
+
+have to use your key file to decrypt the passwor din the aws console. But it's making me wait 5 minutes first
+
+used remote desktop to get into the machine we launched
+
+go into disk management to see your mounted volumes. Mine were not online or initialized yet so I put them up
+
+created a new striped valume with all the disks. Now we have a RAID array with better IO than the root volume
+
+### How to take a snapshot of the RAID array?
+
+problem is that a snapshot excluded data held in caches
+
+This is usally fine, but in RAIDs it can cause problems.
+
+Have to freeze the file system, unmount the RAID array, or shut down the ec2 instance. These ooptions will stop the app from writing to disk and it will flush all caches.
+
+This is important if there's a question about snapshotting a RAID instance. Easiest way to go is shutting down the EC2 instance before the snapshot.
+
+## Create an AMI - Lab
+
+Start by stopping the ec2 instance
+
+Then go to volumes, and create a snapshot
+
+Once it's created, we copy it to another region, and encrypt it while copying it
+
+Change resgions and you can see your new snapshot
+
+Under actions, make an image off of the snapshot
+
+from the ami screen, go to launch
+
+In the storage tab you can see that the root device volume is encrypted
+
+launch instance and it will be copied from region to region.
+
+There are AMI availabel to buy/rent per hour with software built in. There are also community AMIs. However OTS ami's are not encypted. Encrypted AMIS will always be private
+
+Checked that the new instance was up, and then terminated it, and cleared out stuff in London region
+
+### notes
+
+Snapshots of encrypted volumes are encrypted automatically, same goes for volumes that are restored from encrypted snapshots
+
+You can't share encrypted snapshots
+
+unencrypted snapshots can be shared, or even sold
+
+AMIs are base images
+
+They are an important AWS building block, so make sure you understand them for the exam
+
+## AMI types
+
+2 different types: EBS backed, and instance store backed.
+
+Can select an AMI based on Region, OS, Processor architectore, or storage for rood device.
+
+Instance store is Ephermal, EBS backed is not.
+
+On default amis, root devices are always ebs
+
+under community AMIs, you can look for one that has an instance store. This limits what instance types you can use (can't use micro)
+
+At launch time, you can attach sdditional instance store volumes, but once it's created you can't add more. You can only add EBS
+
+With the EBS backed instance, you can stop it, take a snapshot, etc. You can't stop an instance store based volume. It's less durable. If the underlying host fails you will lose your data.
+
+You can *reboot* an instance store and not lose the data though.
+
+Instance stores are older, EBS is newer.
+
+You can detatch an EBS volume and attach it to another instance if you want.
+
+Honestly not sure why you'd use instance store. (looked it up, you'd use it for freqwuently changing data like buffers or caches. Advantage it that it's physically attached to teh host that the EC2 is on)
