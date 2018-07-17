@@ -414,3 +414,101 @@ There's a deeper course on ALBs cuz there's a lot going on here
 For exam, read teh ELB FAQ because it's important.
 
 Deleted ELB and ALB
+
+## Cloud Watch
+
+we techinically already used this when we set up that $10 billing alarm
+
+start ec2 instance and go to monitoring tab
+
+Basic monitoring is default, and it checks metrics every 5 minutes.
+
+Detailed monitoring goes every 1 minute, but it costs more
+
+next go to the cloudwatch section
+
+create a dashboard
+
+can add a bunch of widgets to the dashboard
+
+added a text widget, this just displays some markdown
+
+added a line widget, which will let you plot *any* of the available metrics in your region
+
+need to know for exam what metrics are available by default.
+
+They are CPU related, disk related, network related, and Status checks
+
+CPU: utilization, credit balance, credit usage, and surplus credit balance/charges
+
+Disk: read/write Ops/bytes
+
+Network: In/out + packets in/out
+
+Status check: failures/ instance failures.
+
+RAM is *NOT* tracked by default. Have to set up that metric as custom (needs code)
+
+added some stack graphs and numbers too.
+
+Now creating an alarm
+
+Made it for CPU utilization. Set it up to notify if it goes over 80% it notifies
+
+set up a new notificaiton list (will have to confirm email)
+
+Events: they help you respond to state changes, and lets you route those events when one happens. Example: Lambda functino to update DNS when an EC2 instance enters running.
+
+An event gets pushed every time there is a state change.
+
+Events are out of scope for the exam.
+
+Logs: lets you monitor ec2 instances at the app level. Apache logs, kernal logs, etc.
+
+You install an agent on your ec2 instance, and it passes monitor data back to cloudwatch logs, then you can view them inside the portal.
+
+Logs are also not in the exam, but good to know.
+
+Metrics section lets you view your metrics in one place, as opposed to a dashboard.
+
+### Exam tips
+
+standard monitoring 5 mins, detailed 1 min
+
+Dashboards lets you make... dashboards
+
+Alarms are notificaiton when a metric goes over a threshold
+
+Events are reactions to state changes
+
+Logs are aggregating monitoring and storing logs in cloudwatch
+
+Cloudwatch is *not* cloudtrail. Cloudwatch is logging and monitoring, Cloudtrail is for auditing.
+
+## AWS cli
+
+Launching a new instance to start from scratch
+
+Using amazon linux since it has the cli installed
+
+creating a new CLI user
+
+ssh into new instance and `aws configure`
+
+put in the key and secret for that new user
+
+`aws s3 ls` works now!
+
+look in the `~/.aws` directory to see your keys
+
+This is actually pretty bad, bcause someone with your key could open up the file and see your credentials, which have access to *EVERYTHING*. Next lab will be aboout roles
+
+going to self destruct the instance
+
+`aws ec2 describe-instances`
+
+coped instance id for the running instance
+
+`aws ec2 terminate-instances` with the id to kill the instance
+
+go back and delete that iam user
