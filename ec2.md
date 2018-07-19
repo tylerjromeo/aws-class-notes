@@ -540,3 +540,32 @@ even if you aws configure and set, say, a default region, it won't set the creds
 ## AWS cli and regions
 
 this is a whole 9 minute video saying that aws command line will default to a region that may not be what you want, and if it's wrong you shoudl pass in the `--region` argument
+
+## Bootstrap scripts
+
+Bash scripts that will be run when your ec2 instance starts up
+
+made a basic html page in the text editor
+
+made an s3 bucket and uploaded the index file to it. *did not make it public*
+
+went to IAM and confirmed the s3 admin access role
+
+made a new instance with the s3 access role
+
+added a `yum update` bash script to the instance
+
+sshed into the instance. I guess it ran those updates because I don't see it needing any.
+
+going to set up a web server, and copy all the commands in that script here so that we can make it a bootstrap script later:
+
+```
+#!/bin/bash
+yum update -y
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+aws s3 cp s3://tyler-website-bucket/index.html /var/www/html
+```
+
+put a new instance up with this in the bootstrap script section, asnd it launched with the webserver all ready to go!
