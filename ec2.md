@@ -512,3 +512,31 @@ coped instance id for the running instance
 `aws ec2 terminate-instances` with the id to kill the instance
 
 go back and delete that iam user
+
+## IAM roles and ec2
+
+IAM roles is how you can get aws cli access on an ec2 instance without risking exposure of your keys
+
+going to create anec2 instance and give it a role so that it cazzn access s3
+
+in IAM console, creating an s3 admin access role
+
+remember that roles are created globally, it's not per region
+
+launched a new ec2 instance, and gave it the s3 admin access IAM role
+
+from here you can go in and click on the policy to get a full view of it
+
+also, you can go into the console and actually *attach* a new role to a running intance. This is pretty new.
+
+sshed into the new instance
+
+`aws s3 ls` works! This is because we attached the role
+
+Note that there are *not* any credentials stored in `~/.aws`.
+
+even if you aws configure and set, say, a default region, it won't set the creds
+
+## AWS cli and regions
+
+this is a whole 9 minute video saying that aws command line will default to a region that may not be what you want, and if it's wrong you shoudl pass in the `--region` argument
