@@ -569,3 +569,28 @@ aws s3 cp s3://tyler-website-bucket/index.html /var/www/html
 ```
 
 put a new instance up with this in the bootstrap script section, asnd it launched with the webserver all ready to go!
+
+## Instance metadata
+
+how to get stuff like IP from the command line instead of only through the console.
+
+made a new instance with the s3 admin IAM role and ssh'd in
+
+to get metadata you have to curl `http://169.254.169.254/latest/meta-data`
+
+MEMORIZE THAT URL. 169 254.
+
+`http://169.254.169.254/latest/meta-data`
+
+you get a list of variables that you can check
+
+you do this with startup bash scripts to do cool things. Like send your ip to a lambda that can update route53.
+
+## Autoscaling 101
+
+using launch configurations and auto scaling groups
+
+made a health check html file in local text editor
+
+threw that health check html file into the s3 bucket we made earlier for the website lab
+
