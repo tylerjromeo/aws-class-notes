@@ -594,3 +594,50 @@ made a health check html file in local text editor
 
 threw that health check html file into the s3 bucket we made earlier for the website lab
 
+recreating load balancer from before so we can reuse it. (it's got no targets in the target group though)
+
+go under auto scaling -> launch configurations
+
+give the launch configuration s3 admin access role and put in the bootstrap script from before that autopmatically sets up the website (edited script to copy entire directory from bucket not jsut index.html)
+
+```
+#!/bin/bash
+yum update -y
+yum install httpd -y
+aws s3 cp s3://tyler-website-bucket /var/www/html/ --recursive
+service httpd start
+chkconfig httpd on
+```
+
+when you create the launch configuration, it does not actually make any ec2 instances yet.
+
+Go to create an auto scaling group. Make one with 3 instances
+
+pick your subnet (availability zone). Grab all of them if possible. It'll automatically put them in different zones
+
+under advanced details, select your load balancer (target group) from earlier and set it to use those health checks.
+
+jack the grace period down becuase it defaults to 300 seconds (changed to 120)
+
+scaling policies let you automatically increase/decrease the number of instances in the group depending on rules
+
+set up a rule (if CPU is >90 for 5 minutes, add 1 instance and give it X time to warm up)
+
+Actually don't use the rules for this lab, juse select initial size
+
+Can set up notifications for the group whenever instances launch, terminate etc.
+
+after making the zone, you should see it create your 3 instances right there in the ec2 dashboard (I had to do this twice I messed up the first time)
+
+the instances all came up and they all had the web pag:w
+e working
+
+load balancer url worked too
+
+go in and terminate 2 of the instances to see what happens
+
+IPs for the guys I terminated don't work anymore. ELB still works. You can see in the ELB config that 2 of the instances are unhealthy.
+
+Waiting for like a minute, you can see it starts creating new instances!
+
+after this, went in and deleted the autoscaling group, that will auto kill the instances that it uses
