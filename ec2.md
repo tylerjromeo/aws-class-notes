@@ -641,3 +641,27 @@ IPs for the guys I terminated don't work anymore. ELB still works. You can see i
 Waiting for like a minute, you can see it starts creating new instances!
 
 after this, went in and deleted the autoscaling group, that will auto kill the instances that it uses
+
+## EC2 Placement groups
+
+This is in exams a lot so know what it is.
+
+2 types: Clustered and Spread.
+
+Spread is relatively new, so the exam is probably talking about clustered.
+
+Clustered is a grouping of instances within a single AZ. Its for when you need low network latency or high throughput or both. For hadoop or cassandra or similar.
+
+Stuff that's going to be talking to each other a lot on the network.
+
+Only certain instances can be in a Clustered placement groups. (no micros, just big boyz)
+
+Thing to know: Clustered is in 1 AZ. Can't be accross multiple.
+
+SPREAD placement group is instances that are spread accross different pieces of hardware. For if your app has a small number of critical instances that need to be separated.
+
+name for a splacement group must be unique for your account
+
+AWS recommends you use homogenous instances in the groups. Same size + family.
+
+Can't merge placement groups, and can't move an instance into a placement group. But you can make an AMI from an instance and then launch that into the placement group.
